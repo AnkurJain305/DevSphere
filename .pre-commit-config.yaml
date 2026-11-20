@@ -1,0 +1,24 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.6
+    hooks:
+      - id: ruff-check
+        args: ["--config", "apps/api/pyproject.toml"]
+        files: ^apps/api/
+      - id: ruff-format
+        args: ["--config", "apps/api/pyproject.toml", "--check"]
+        files: ^apps/api/
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v2.4.1
+    hooks:
+      - id: mypy
+        files: ^apps/api/
+        args: ["--config-file", "apps/api/pyproject.toml"]
+        additional_dependencies:
+          - pydantic==2.14.4
+          - pydantic-settings==2.16.3
+          - fastapi==0.165.0
+          - sqlalchemy==2.1.9
+          - alembic==1.20.1
+          - pytest==9.2.0
+          - httpx==0.28.1

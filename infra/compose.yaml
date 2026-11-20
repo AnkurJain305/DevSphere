@@ -1,0 +1,36 @@
+# API and Redis run locally. PostgreSQL is the shared Supabase database.
+# The connection string lives in apps/api/.env and is not committed.
+
+services:
+  api:
+    build:
+      context: ../apps/api
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../apps/api/.env
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  redis:
+    image: redis:8
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
